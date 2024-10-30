@@ -36,3 +36,357 @@ dataSources:
         - event: Transfer(indexed address,indexed address,uint256)
           handler: handleTransfer
       file: ./src/nodl.ts
+  - kind: ethereum
+    name: NODLMigration
+    network: zksync-era
+    source:
+      address: "0x5de7fe085ee66Fb48447e75AA8fb0598a080AEe0"
+      abi: NODLMigration
+      startBlock: 33664635
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - VoteStarted
+        - Voted
+        - Withdrawn
+      abis:
+        - name: NODLMigration
+          file: ./abis/NODLMigration.json
+      eventHandlers:
+        - event: VoteStarted(indexed bytes32,address,indexed address,uint256)
+          handler: handleVoteStarted
+        - event: Voted(indexed bytes32,address)
+          handler: handleVoted
+        - event: Withdrawn(indexed bytes32,indexed address,uint256)
+          handler: handleWithdrawn
+      file: ./src/nodl-migration.ts
+  - kind: ethereum
+    name: Rewards
+    network: zksync-era
+    source:
+      address: "0xe629b208046f7a33de3a43931c9fe505a7ac3d36"
+      abi: Rewards
+      startBlock: 44627456
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - BatchMinted
+        - BatchSubmitterRewardSet
+        - EIP712DomainChanged
+        - Minted
+        - PeriodSet
+        - QuotaSet
+        - ContractRoleAdminChanged
+        - ContractRoleGranted
+        - ContractRoleRevoked
+      abis:
+        - name: Rewards
+          file: ./abis/Rewards.json
+      eventHandlers:
+        - event: BatchMinted(uint256,uint256,bytes32)
+          handler: handleBatchMinted
+        - event: BatchSubmitterRewardSet(uint16)
+          handler: handleBatchSubmitterRewardSet
+        - event: EIP712DomainChanged()
+          handler: handleEIP712DomainChanged
+        - event: Minted(indexed address,uint256,uint256)
+          handler: handleMinted
+        - event: PeriodSet(uint256)
+          handler: handlePeriodSet
+        - event: QuotaSet(uint256)
+          handler: handleQuotaSet
+        - event: RoleAdminChanged(indexed bytes32,indexed bytes32,indexed bytes32)
+          handler: handleRoleAdminChanged
+        - event: RoleGranted(indexed bytes32,indexed address,indexed address)
+          handler: handleRoleGranted
+        - event: RoleRevoked(indexed bytes32,indexed address,indexed address)
+          handler: handleRoleRevoked
+      file: ./src/rewards.ts
+  - kind: ethereum
+    name: MigrationNFT
+    network: zksync-era
+    source:
+      address: "0xd837cFb550b7402665499f136eeE7a37D608Eb18"
+      abi: MigrationNFT
+      startBlock: 39506626
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - MigrationNFTApproval
+        - ApprovalForAll
+        - MigrationNFTTransfer
+      abis:
+        - name: MigrationNFT
+          file: ./abis/MigrationNFT.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/migration-nft.ts
+  - kind: ethereum
+    name: WhitelistPaymaster
+    network: zksync-era
+    source:
+      address: "0xb2b7075ead608fabf04c3959983ee63df5b0e0fc"
+      abi: WhitelistPaymaster
+      startBlock: 31259761
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - WhitelistPaymasterRoleAdminChanged
+        - WhitelistPaymasterRoleGranted
+        - WhitelistPaymasterRoleRevoked
+      abis:
+        - name: WhitelistPaymaster
+          file: ./abis/WhitelistPaymaster.json
+      eventHandlers:
+        - event: RoleAdminChanged(indexed bytes32,indexed bytes32,indexed bytes32)
+          handler: handleRoleAdminChanged
+        - event: RoleGranted(indexed bytes32,indexed address,indexed address)
+          handler: handleRoleGranted
+        - event: RoleRevoked(indexed bytes32,indexed address,indexed address)
+          handler: handleRoleRevoked
+      file: ./src/whitelist-paymaster.ts
+  - kind: ethereum
+    name: ClickNFT
+    network: zksync-era
+    source:
+      address: "0x95b3641d549f719eb5105f9550eca4a7a2f305de"
+      abi: ClickNFT
+      startBlock: 31259774
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - ClickNFTApproval
+        - ClickNFTApprovalForAll
+        - BatchMetadataUpdate
+        - MetadataUpdate
+        - ClickNFTTransfer
+      abis:
+        - name: ClickNFT
+          file: ./abis/ClickNFT.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: BatchMetadataUpdate(uint256,uint256)
+          handler: handleBatchMetadataUpdate
+        - event: MetadataUpdate(uint256)
+          handler: handleMetadataUpdate
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/content-sign.ts
+  - kind: ethereum
+    name: MissionPayments
+    network: zksync-era
+    source:
+      address: "0x3EB3486Fb1fb9efF85114aa37c8C4A9ea5de031B"
+      abi: MissionPayments
+      startBlock: 47325781
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - MissionPaymentsPeriodSet
+        - MissionPaymentsQuotaSet
+        - MissionPaymentsRoleAdminChanged
+        - MissionPaymentsRoleGranted
+        - MissionPaymentsRoleRevoked
+      abis:
+        - name: MissionPayments
+          file: ./abis/MissionPayments.json
+      eventHandlers:
+        - event: PeriodSet(uint256)
+          handler: handlePeriodSet
+        - event: QuotaSet(uint256)
+          handler: handleQuotaSet
+        - event: RoleAdminChanged(indexed bytes32,indexed bytes32,indexed bytes32)
+          handler: handleRoleAdminChanged
+        - event: RoleGranted(indexed bytes32,indexed address,indexed address)
+          handler: handleRoleGranted
+        - event: RoleRevoked(indexed bytes32,indexed address,indexed address)
+          handler: handleRoleRevoked
+      file: ./src/mission-payments.ts
+  - kind: ethereum
+    name: NodleContentSign
+    network: zksync-era
+    source:
+      address: "0xe980886e4072d32784187D547F9663eFef50f58F"
+      abi: NodleContentSign
+      startBlock: 33330409
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - NodleContentSignApproval
+        - NodleContentSignApprovalForAll
+        - NodleContentSignBatchMetadataUpdate
+        - NodleContentSignMetadataUpdate
+        - NodleContentSignRoleAdminChanged
+        - NodleContentSignRoleGranted
+        - NodleContentSignRoleRevoked
+        - NodleContentSignTransfer
+      abis:
+        - name: NodleContentSign
+          file: ./abis/NodleContentSign.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: BatchMetadataUpdate(uint256,uint256)
+          handler: handleBatchMetadataUpdate
+        - event: MetadataUpdate(uint256)
+          handler: handleMetadataUpdate
+        - event: RoleAdminChanged(indexed bytes32,indexed bytes32,indexed bytes32)
+          handler: handleRoleAdminChanged
+        - event: RoleGranted(indexed bytes32,indexed address,indexed address)
+          handler: handleRoleGranted
+        - event: RoleRevoked(indexed bytes32,indexed address,indexed address)
+          handler: handleRoleRevoked
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/content-sign.ts
+  - kind: ethereum
+    name: VivendiContentSign
+    network: zksync-era
+    source:
+      address: "0x6FE81f2fDE5775355962B7F3CC9b0E1c83970E15"
+      abi: VivendiContentSign
+      startBlock: 33330420
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - VivendiContentSignApproval
+        - VivendiContentSignApprovalForAll
+        - VivendiContentSignBatchMetadataUpdate
+        - VivendiContentSignMetadataUpdate
+        - VivendiContentSignRoleAdminChanged
+        - VivendiContentSignRoleGranted
+        - VivendiContentSignRoleRevoked
+        - VivendiContentSignTransfer
+      abis:
+        - name: VivendiContentSign
+          file: ./abis/VivendiContentSign.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: BatchMetadataUpdate(uint256,uint256)
+          handler: handleBatchMetadataUpdate
+        - event: MetadataUpdate(uint256)
+          handler: handleMetadataUpdate
+        - event: RoleAdminChanged(indexed bytes32,indexed bytes32,indexed bytes32)
+          handler: handleRoleAdminChanged
+        - event: RoleGranted(indexed bytes32,indexed address,indexed address)
+          handler: handleRoleGranted
+        - event: RoleRevoked(indexed bytes32,indexed address,indexed address)
+          handler: handleRoleRevoked
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/content-sign.ts
+  - kind: ethereum
+    name: DemoContentSign
+    network: zksync-era
+    source:
+      address: "0x48e5c6f97b00Db0A4F74B1C1bc8ecd78452dDF6F"
+      abi: DemoContentSign
+      startBlock: 33491253
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - DemoContentSignApproval
+        - DemoContentSignApprovalForAll
+        - DemoContentSignBatchMetadataUpdate
+        - DemoContentSignMetadataUpdate
+        - DemoContentSignRoleAdminChanged
+        - DemoContentSignRoleGranted
+        - DemoContentSignRoleRevoked
+        - DemoContentSignTransfer
+      abis:
+        - name: DemoContentSign
+          file: ./abis/DemoContentSign.json
+      eventHandlers:
+        - event: Approval(indexed address,indexed address,indexed uint256)
+          handler: handleApproval
+        - event: ApprovalForAll(indexed address,indexed address,bool)
+          handler: handleApprovalForAll
+        - event: BatchMetadataUpdate(uint256,uint256)
+          handler: handleBatchMetadataUpdate
+        - event: MetadataUpdate(uint256)
+          handler: handleMetadataUpdate
+        - event: RoleAdminChanged(indexed bytes32,indexed bytes32,indexed bytes32)
+          handler: handleRoleAdminChanged
+        - event: RoleGranted(indexed bytes32,indexed address,indexed address)
+          handler: handleRoleGranted
+        - event: RoleRevoked(indexed bytes32,indexed address,indexed address)
+          handler: handleRoleRevoked
+        - event: Transfer(indexed address,indexed address,indexed uint256)
+          handler: handleTransfer
+      file: ./src/content-sign.ts
+  - kind: ethereum
+    name: Payments
+    network: zksync-era
+    source:
+      address: "0x3EB3486Fb1fb9efF85114aa37c8C4A9ea5de031B"
+      abi: Payments
+      startBlock: 47325781
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      entities:
+        - PaymentsPeriodSet
+        - PaymentsQuotaSet
+        - PaymentsRoleAdminChanged
+        - PaymentsRoleGranted
+        - PaymentsRoleRevoked
+      abis:
+        - name: Payments
+          file: ./abis/Payments.json
+      eventHandlers:
+        - event: PeriodSet(uint256)
+          handler: handlePeriodSet
+        - event: QuotaSet(uint256)
+          handler: handleQuotaSet
+        - event: RoleAdminChanged(indexed bytes32,indexed bytes32,indexed bytes32)
+          handler: handleRoleAdminChanged
+        - event: RoleGranted(indexed bytes32,indexed address,indexed address)
+          handler: handleRoleGranted
+        - event: RoleRevoked(indexed bytes32,indexed address,indexed address)
+          handler: handleRoleRevoked
+      file: ./src/payments.ts
+templates:
+  - name: TokenMetadata
+    kind: file/ipfs
+    mapping:
+      apiVersion: 0.0.7
+      language: wasm/assemblyscript
+      file: ./src/mapping.ts
+      handler: handleMetadata
+      entities:
+        - TokenMetadata
+      abis:
+        - name: Token
+          file: ./abis/ClickNFT.json

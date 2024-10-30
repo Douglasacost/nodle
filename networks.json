@@ -1,8 +1,37 @@
 {
   "zksync-era": {
     "NODL": {
-      "address": "0xBD4372e44c5eE654dd838304006E1f0f69983154",
-      "startBlock": 33664629
+      "address": "0xBD4372e44c5eE654dd838304006E1f0f69983154"
+    },
+    "NODLMigration": {
+      "address": "0x5de7fe085ee66Fb48447e75AA8fb0598a080AEe0"
+    },
+    "Rewards": {
+      "address": "0xe629b208046f7a33de3a43931c9fe505a7ac3d36"
+    },
+    "MigrationNFT": {
+      "address": "0xd837cFb550b7402665499f136eeE7a37D608Eb18"
+    },
+    "WhitelistPaymaster": {
+      "address": "0xb2b7075ead608fabf04c3959983ee63df5b0e0fc"
+    },
+    "ClickNFT": {
+      "address": "0x95b3641d549f719eb5105f9550eca4a7a2f305de"
+    },
+    "MissionPayments": {
+      "address": "0x3EB3486Fb1fb9efF85114aa37c8C4A9ea5de031B"
+    },
+    "NodleContentSign": {
+      "address": "0xe980886e4072d32784187D547F9663eFef50f58F"
+    },
+    "VivendiContentSign": {
+      "address": "0x6FE81f2fDE5775355962B7F3CC9b0E1c83970E15"
+    },
+    "DemoContentSign": {
+      "address": "0x48e5c6f97b00Db0A4F74B1C1bc8ecd78452dDF6F"
+    },
+    "Payments": {
+      "address": "0x3EB3486Fb1fb9efF85114aa37c8C4A9ea5de031B"
     }
   }
 }
