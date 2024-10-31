@@ -13,9 +13,9 @@ import {
   ERC721MetadataUpdate,
   ERC721Token,
   ERC721Transfer,
+  User,
 } from "../generated/schema";
 import { TokenMetadata as TokenMetadataTemplate } from "../generated/templates";
-
 
 export function handleApproval(event: ApprovalEvent): void {
   let entity = new ERC721Approval(
@@ -110,8 +110,10 @@ export function handleTransfer(event: TransferEvent): void {
       event.address.concatI32(event.params.tokenId.toI32())
     );
     token.identifier = event.params.tokenId;
-    token.owner = event.params.to;
+    token.owner = event.params.to.toHexString();
     token.timestamp = event.block.timestamp;
+    token.contract = event.address;
+    token.transactionHash = event.transaction.hash;
 
     const contract = ClickNFT.bind(event.address);
 
@@ -120,11 +122,17 @@ export function handleTransfer(event: TransferEvent): void {
     if (!tokenURI.reverted) {
       token.uri = tokenURI.value;
       const strippedURI = tokenURI.value.split("ipfs://")[1];
-
+      token.ipfsURI = strippedURI;
       TokenMetadataTemplate.create(strippedURI);
     }
   } else {
-    token.owner = event.params.to;
+    token.owner = event.params.to.toHexString();
+  }
+
+  let user = User.load(event.params.to.toHexString());
+  if (!user) {
+    user = new User(event.params.to.toHexString());
+    user.save();
   }
 
   token.save();

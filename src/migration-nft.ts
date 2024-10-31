@@ -10,6 +10,7 @@ import {
   ERC721Token,
   ERC721Transfer,
 } from "../generated/schema";
+import { TokenMetadata as TokenMetadataTemplate } from "../generated/templates";
 
 export function handleApproval(event: ApprovalEvent): void {
   let entity = new ERC721Approval(
@@ -71,18 +72,24 @@ export function handleTransfer(event: TransferEvent): void {
       event.address.concatI32(event.params.tokenId.toI32())
     );
     token.identifier = event.params.tokenId;
-    token.owner = event.params.to;
+    token.owner = event.params.to.toHexString();
     token.timestamp = event.block.timestamp;
+    token.contract = event.address;
+    token.transactionHash = event.transaction.hash;
 
     const contract = MigrationNFT.bind(event.address);
 
     let tokenURI = contract.try_tokenURI(event.params.tokenId);
 
     if (!tokenURI.reverted) {
+      const strippedURI = tokenURI.value.split("ipfs://")[1];
       token.uri = tokenURI.value;
+      token.ipfsURI = strippedURI;
+      
+      TokenMetadataTemplate.create(strippedURI);
     }
   } else {
-    token.owner = event.params.to;
+    token.owner = event.params.to.toHexString();
   }
 
   token.save();

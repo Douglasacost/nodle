@@ -381,11 +381,12 @@ type ERC721Token @entity {
   id: Bytes!
   contract: Bytes!
   identifier: BigInt!
-  owner: Bytes!
-  approval: Bytes!
+  owner: User!
+  approval: Bytes
   uri: String
-  metadata: TokenMetadata
+  ipfsURI: TokenMetadata
   timestamp: BigInt
+  transactionHash: Bytes
 }
 
 type TokenMetadata @entity {
@@ -395,7 +396,6 @@ type TokenMetadata @entity {
   channel: String @index
   name: String
   contentType: String
-  transactionHash: String
   description: String
   application: String
   duration: Int
@@ -404,4 +404,9 @@ type TokenMetadata @entity {
   latitude: BigDecimal @index
   locationPrecision: String
   contentHash: String
+}
+
+type User @entity {
+  id: ID!
+  tokens: [ERC721Token!]! @derivedFrom(field: "owner")
 }

@@ -1,28 +1,34 @@
-import { json, Bytes, dataSource, BigInt, BigDecimal } from "@graphprotocol/graph-ts";
+import {
+  json,
+  Bytes,
+  dataSource,
+  BigInt,
+  BigDecimal,
+  TypedMap,
+  JSONValue,
+  log,
+  JSONValueKind,
+} from "@graphprotocol/graph-ts";
 import { TokenMetadata } from "../generated/schema";
 
-const keysMapping = {
-  application: "Application",
-  channel: "Channel",
-  contentType: "Content Type",
-  duration: "Duration (sec)",
-  captureDate: "Capture date",
-  longitude: "Longtitude",
-  latitude: "Latitude",
-  locationPrecision: "Location Precision",
-};
-
-function convertArrayToObject(arr: any[]) {
-  // validate array
+function getFromObjArray(arr: JSONValue[], key: string): JSONValue | null {
+  // Validate the array
   if (!Array.isArray(arr)) return null;
 
-  return arr.reduce((acc: { [key: string]: any }, nonObject) => {
-    const obj = nonObject.toObject();
-    const trait_type = obj.get("trait_type").toString();
-    const value = obj.get("value").toString();
-    acc[trait_type] = value;
-    return acc;
-  }, {});
+  for (let i = 0; i < arr.length; i++) {
+    const obj = arr[i];
+    if (obj) {
+      const value = obj.toObject();
+
+      const keyValue = value.get(key);
+      log.error("Value: {} {}", [keyValue ? keyValue.toString() : "null", key]);
+      if (keyValue !== null) {
+        return keyValue;
+      }
+    }
+  }
+
+  return null;
 }
 
 export function handleMetadata(content: Bytes): void {
@@ -31,7 +37,7 @@ export function handleMetadata(content: Bytes): void {
   if (value) {
     const image = value.get("image");
     const content = value.get("content");
-    const name = value.get("name");
+    const name = value.get("name") || value.get("title");
     const description = value.get("description");
     const channel = value.get("channel");
     const contentType = value.get("contentType");
@@ -39,7 +45,11 @@ export function handleMetadata(content: Bytes): void {
     const attributes = value.get("attributes");
     const thumbnail = value.get("thumbnail");
 
-    tokenMetadata.content = image ? image.toString() : content ? content.toString() : "";
+    tokenMetadata.content = image
+      ? image.toString()
+      : content
+      ? content.toString()
+      : "";
     tokenMetadata.name = name ? name.toString() : "";
     tokenMetadata.description = description ? description.toString() : "";
     tokenMetadata.channel = channel ? channel.toString() : "";
@@ -47,27 +57,53 @@ export function handleMetadata(content: Bytes): void {
     tokenMetadata.contentHash = contentHash ? contentHash.toString() : "";
     tokenMetadata.thumbnail = thumbnail ? thumbnail.toString() : "";
 
-    const attributesArray = attributes?.toArray();
     // new metadata from attributes
-    if (attributesArray && attributesArray.length > 0) {
-      const objectAttributes = convertArrayToObject(attributesArray);
+    if (attributes) {
+      const attributesArray = attributes.toArray();
 
-      if (objectAttributes) {
-        tokenMetadata.application = objectAttributes[keysMapping.application];
-        tokenMetadata.channel = objectAttributes[keysMapping.channel];
-        tokenMetadata.contentType = objectAttributes[keysMapping.contentType];
-        tokenMetadata.duration = objectAttributes[keysMapping.duration] || 0;
-        tokenMetadata.captureDate = objectAttributes[keysMapping.captureDate]
-          ? BigInt.fromString(objectAttributes[keysMapping.captureDate])
-          : BigInt.fromI32(0);
-        tokenMetadata.longitude = objectAttributes[keysMapping.longitude]
-          ? BigDecimal.fromString(objectAttributes[keysMapping.longitude])
-          : null;
-        tokenMetadata.latitude = objectAttributes[keysMapping.latitude]
-          ? BigDecimal.fromString(objectAttributes[keysMapping.latitude])
-          : null;
-        tokenMetadata.locationPrecision =
-          objectAttributes[keysMapping.locationPrecision];
+      // Assign the name and image object to the tokenMetadata.name and tokenMetadata.image fields. Then, create an attributesArray variable that will be used to store the attributes object as an array. Converting to an array allows us to first loop through the array with the `switch` statement below, then assign the trait_type and value to the tokenMetadata fields.
+      log.error("Attributes: {}", [tokenMetadata.id]);
+
+      if (attributesArray) {
+        for (let i = 0; i < attributesArray.length; i++) {
+          const attributeObject = attributesArray[i].toObject();
+          const traitType = attributeObject.get("trait_type");
+          const value = attributeObject.get("value");
+
+          if (!traitType || !value || traitType.kind != JSONValueKind.STRING) {
+            log.error("Trait type or value is null", []);
+            continue;
+          }
+
+          const key = traitType.toString();
+          const stringValue =
+            value.kind == JSONValueKind.STRING
+              ? value.toString()
+              : value.toBigInt().toString();
+          const isNumber = value.kind == JSONValueKind.NUMBER;
+
+          if (key == "Application") {
+            tokenMetadata.application = stringValue;
+          } else if (key == "Channel") {
+            tokenMetadata.channel = stringValue;
+          } else if (key == "Content Type") {
+            tokenMetadata.contentType = stringValue;
+          } else if (key == "Duration (sec)") {
+            tokenMetadata.duration = isNumber
+              ? I32.parseInt(stringValue)
+              : I32.parseInt(value.toString());
+          } else if (key == "Capture date") {
+            tokenMetadata.captureDate = isNumber
+              ? value.toBigInt()
+              : BigInt.fromString(stringValue);
+          } else if (key == "Longitude") {
+            tokenMetadata.longitude = BigDecimal.fromString(stringValue);
+          } else if (key == "Latitude") {
+            tokenMetadata.latitude = BigDecimal.fromString(stringValue);
+          } else if (key == "Location Precision") {
+            tokenMetadata.locationPrecision = stringValue;
+          }
+        }
       }
     }
 
